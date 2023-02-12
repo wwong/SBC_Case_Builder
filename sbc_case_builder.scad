@@ -87,7 +87,7 @@ case_design = "shell"; // [shell,panel,stacked,tray,round,hex,snap,fitted]
 // base case style
 case_style = "none"; // ["none","vu5","vu7","sides"]
 // single board computer model
-sbc_model = "c1+"; //  ["c1+", "c2", "c4", "xu4", "xu4q", "mc1", "hc1", "n1", "n2", "n2+", "n2+_noheatsink", "n2l", "n2lq", "m1", "m1_noheatsink", "h2", "h3", "hc4", "show2", "rpizero", "rpizero2w", "rpi1a+", "rpi1b+", "rpi3a+", "rpi3b", "rpi3b+", "rpi4b", "a64", "rock64", "rockpro64", "quartz64a", "quartz64b", "h64b", "star64", "atomicpi", "jetsonnano", "rockpi4b+", "rockpi4c", "rockpi4c+", "rockpi5b", "vim1", "vim2", "vim3", "vim3l", "vim4", "tinkerboard", "tinkerboard-s", "tinkerboard-2", "tinkerboard-r2", "opizero", "opizero2", "opir1plus_lts", "licheerv+dock", "test"]
+sbc_model = "c1+"; //  ["c1+", "c2", "c4", "xu4", "xu4q", "mc1", "hc1", "n1", "n2", "n2+", "n2+_noheatsink", "n2l", "n2lq", "m1", "m1_noheatsink", "h2", "h3", "hc4", "show2", "rpizero", "rpizero2w", "rpi1a+", "rpi1b+", "rpi3a+", "rpi3b", "rpi3b+", "rpi4b", "a64", "rock64", "rockpro64", "quartz64a", "quartz64b", "h64b", "star64", "atomicpi", "jetsonnano", "rockpi4b+", "rockpi4c", "rockpi4c+", "rockpi5b", "vim1", "vim2", "vim3", "vim3l", "vim4", "tinkerboard", "tinkerboard-s", "tinkerboard-2", "tinkerboard-r2", "opizero", "opizero2", "opir1plus_lts", "licheerv+dock", "test", "cf_base"]
 // sbc location x axis
 pcb_loc_x = 0; //[0:.5:300]
 // sbc location y axis
@@ -164,6 +164,11 @@ sata_punchout = false;
 gpio_opening = "none"; // [none,vent,open,punchout]
 // cooling openings
 cooling = "fan"; // [none,vents,fan,custom]
+//fan offsets
+fan_offset_tx = 0; // [-100:0.5:100]
+fan_offset_ty = 0; // [-100:0.5:100]
+fan_offset_bx = 0; // [-100:0.5:100]
+fan_offset_by = 0; // [-100:0.5:100]
 // exhaust vents
 exhaust_vents = "vent"; // [none,vent]
 // case accessory group to load
@@ -2240,7 +2245,7 @@ module open_io() {
         
         // bottom cooling openings
         if(side == "bottom" && cooling == "fan" && class == "heatsink") {
-            translate([loc_x+12,loc_y-28,-adjust]) 
+            translate([loc_x+12+fan_offset_bx,loc_y-28+fan_offset_by,-adjust]) 
                 fan_mask(40,floorthick+(2*adjust),2);
         }
         if(side == "bottom" && cooling == "vents" && class == "heatsink") {
@@ -2264,7 +2269,7 @@ module open_io() {
         // top cooling openings
         if(side == "top" && cooling == "fan" && class == "heatsink" && type != "h3_oem" 
             && type != "h2_oem" && type != "n2_oem" && type != "n2+_oem") {
-                translate([loc_x+6,loc_y-28,case_z-(floorthick+adjust)-5]) 
+                translate([loc_x+6+fan_offset_tx,loc_y-28+fan_offset_ty,case_z-(floorthick+adjust)-5]) 
                     fan_mask(40,floorthick+(2*adjust)+8,2);
         }
         if(side == "top" && cooling == "fan" && class == "heatsink" && (type == "n2_oem" || type == "n2+_oem")) {
